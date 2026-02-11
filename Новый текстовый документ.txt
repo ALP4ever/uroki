@@ -1,0 +1,136 @@
+namespace lab2
+{
+    internal class Program
+    {
+        class Radio
+        {
+            private bool _state = false;
+            public void On()
+            {
+                if (_state == false)
+                {
+                    _state = true;
+                }
+
+            }
+            public void Off()
+            {
+                if (_state == true)
+                {
+                    _state = false;
+                }
+            }
+            public bool Status()
+            {
+                return _state;
+            }
+
+        }
+        class Car
+        {
+            private string _name;
+            private double _speed;
+            private bool _started = false;
+            private double _maxspeed;
+            private Radio radio;
+
+            public Car()
+            {
+                radio = new Radio();
+            }
+            public Car(string name)
+            {
+                radio = new Radio();
+                _name = name;
+            }
+
+            public Car(string name, double maxspeed)
+            {
+                radio = new Radio();
+                _name = name;
+                _maxspeed = maxspeed;
+            }
+
+            public void Start()
+            {
+                if (_started == false)
+                {
+                    _started = true;
+                }
+                Console.WriteLine("Car is On");
+            }
+            public void Stop()
+            {
+                if (_started == false)
+                {
+                    _started = true;
+                }
+                Console.WriteLine("Car is Off");
+            }
+
+            public void Speedup(double value)
+            {
+                if (value < _maxspeed)
+                {
+                    while(_speed < value)
+                    {
+                        _speed += 6;
+                        Console.WriteLine(_speed.ToString()+" Km/h");
+                    }
+                    
+                }
+                else
+                {
+                    Console.WriteLine("Dvijok govno");
+                }
+            }
+
+
+            public void Radio_On()
+            {
+                radio.On();
+                Console.WriteLine(_name + "Radio Online");
+            }
+            public void Radio_Off()
+            {
+                radio.Off();
+                Console.WriteLine(_name + "Radio Offline");
+            }
+            public void Radio_Status()
+            {
+                if(radio.Status() == true)
+                {
+                    Console.WriteLine(_name + "Radio is On");
+                }
+                else
+                {
+                    Console.WriteLine(_name + "Radio is Off");
+                }
+            }
+        }
+        
+
+        class Toyota : Car
+        {
+            public Toyota(string name, double v) : base(name)
+            {
+
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            Toyota probox = new Toyota("probox", 300);
+            Toyota corolla = new Toyota("corolla", 300);
+            probox.Start();
+            corolla.Start();
+            probox.Speedup(16);
+            probox.Radio_On();
+            corolla.Radio_Status();
+            probox.Radio_Status();
+            probox.Radio_Off();
+            probox.Radio_Status();
+            probox.Stop();
+        }
+    }
+}
