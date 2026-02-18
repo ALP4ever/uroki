@@ -33,33 +33,37 @@ namespace lab2
             public void Start()
             {
                 _started = true;
-                Console.WriteLine($"\n[!] {_name} заведена.");
+                Console.WriteLine(_name + " is On");
             }
 
             public void Stop()
             {
                 _started = false;
                 _speed = 0;
-                Console.WriteLine($"\n[!] {_name} заглушена.");
+                Console.WriteLine(_name + " is Off");
             }
 
             public void Speedup(double value)
             {
-                if (!_started) { Console.WriteLine("Сначала заведи машину!"); return; }
+                if (!_started) 
+                { 
+                    Console.WriteLine("Сначала заведи машину!"); 
+                    return; 
+                }
 
                 if (value <= _maxspeed)
                 {
                     while (_speed < value - 6)
                     {
                         _speed += 6;
-                        Console.WriteLine($"{_speed} Km/h / {_name}");
+                        Console.WriteLine(_speed.ToString() + " Km/h / " + _name);
                     }
                     _speed = value;
-                    Console.WriteLine($"{_speed} Km/h / {_name} (Цель достигнута)");
+                    Console.WriteLine(_speed.ToString() + " Km/h / " + _name +"!!!");
                 }
                 else
                 {
-                    Console.WriteLine($"Движок говно у {_name}, максимум: {_maxspeed}");
+                    Console.WriteLine("Движок не тянет у" + _name +" максимум: " + _maxspeed.ToString());
                 }
             }
 
@@ -69,63 +73,70 @@ namespace lab2
                 while (value < _speed - 6)
                 {
                     _speed -= 6;
-                    Console.WriteLine($"{_speed} Km/h / {_name}");
+                    Console.WriteLine(_speed.ToString() + " Km/h / " + _name);
                 }
                 _speed = value;
-                Console.WriteLine($"{_speed} Km/h / {_name} (Замедлились)");
+                Console.WriteLine(_speed.ToString() + " Km/h / " + _name + "!!!");
             }
 
             public void Radio_On() => radio.On();
             public void Radio_Off() => radio.Off();
             public void Radio_Status()
             {
-                string status = radio.Status() ? "Включено" : "Выключено";
-                Console.WriteLine($"Радио в {_name}: {status}");
+                if (radio.Status() == true)
+                {
+                    Console.WriteLine(_name + "Radio is On");
+                }
+                else
+                {
+                    Console.WriteLine(_name + "Radio is Off");
+                }
             }
         }
 
-        // Наследники
+
         class Toyota : Car { public Toyota(string name, double v) : base(name, v) { } }
         class Buggatti : Car { public Buggatti(string name, double v) : base(name, v) { } }
         class Lada : Car { public Lada(string name, double v) : base(name, v) { } }
 
         static void Main(string[] args)
         {
-            // Список доступных машин
             List<Car> garage = new List<Car>
             {
-                new Toyota("Probox", 180),
+                new Toyota("Land Cruiser 200", 280),
                 new Buggatti("Veyron", 420),
-                new Lada("Vesta", 160)
+                new Lada("Vesta", 100)
             };
 
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("=== ВЫБЕРИТЕ АВТОМОБИЛЬ ===");
+                Console.WriteLine("ВЫБЕРИТЕ АВТОМОБИЛЬ");
                 for (int i = 0; i < garage.Count; i++)
                 {
-                    Console.WriteLine($"{i + 1}. {garage[i].GetName()}");
+                    Console.WriteLine(i.ToString() + " - " + garage[i].GetName());
                 }
-                Console.WriteLine("0. Выход");
 
-                if (!int.TryParse(Console.ReadLine(), out int carChoice) || carChoice == 0) break;
+                if (!int.TryParse(Console.ReadLine(), out int carChoice)) { 
+                    break; 
+                }
+                
                 if (carChoice > garage.Count) continue;
 
                 Car selectedCar = garage[carChoice - 1];
                 bool backToGarage = false;
 
-                // Меню функций машины
                 while (!backToGarage)
                 {
-                    Console.WriteLine($"\n--- Управление: {selectedCar.GetName()} ---");
+                    Console.WriteLine(selectedCar.GetName());
                     Console.WriteLine("1. Завести");
                     Console.WriteLine("2. Разогнаться");
                     Console.WriteLine("3. Притормозить");
-                    Console.WriteLine("4. Вкл/Выкл Радио");
-                    Console.WriteLine("5. Статус Радио");
-                    Console.WriteLine("6. Заглушить");
-                    Console.WriteLine("0. Вернуться в гараж");
+                    Console.WriteLine("4. Вкл Радио");
+                    Console.WriteLine("5. Выкл Радио");
+                    Console.WriteLine("6. Статус Радио");
+                    Console.WriteLine("7. Заглушить");
+                    Console.WriteLine("0. Назад");
                     Console.Write("Выбор: ");
 
                     string action = Console.ReadLine();
@@ -138,18 +149,27 @@ namespace lab2
                             selectedCar.Speedup(s);
                             break;
                         case "3":
-                            Console.Write("До какой снизить: ");
+                            Console.Write("Снизить скорость до: ");
                             double.TryParse(Console.ReadLine(), out double slow);
                             selectedCar.Slowdown(slow);
                             break;
                         case "4":
-                            // Переключалка
-                            selectedCar.Radio_On(); 
+                            selectedCar.Radio_On();
                             Console.WriteLine("Радио включено.");
                             break;
-                        case "5": selectedCar.Radio_Status(); break;
-                        case "6": selectedCar.Stop(); break;
-                        case "0": backToGarage = true; break;
+                        case "5":
+                            selectedCar.Radio_Off();
+                            Console.WriteLine("Радио выключено.");
+                            break;
+                        case "6": 
+                            selectedCar.Radio_Status(); 
+                            break;
+                        case "7": 
+                            selectedCar.Stop(); 
+                            break;
+                        case "0": 
+                            backToGarage = true; 
+                            break;
                         default: Console.WriteLine("Неверный ввод"); break;
                     }
                 }
