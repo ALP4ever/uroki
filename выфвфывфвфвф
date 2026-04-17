@@ -1,0 +1,300 @@
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CompARKv2.Classes
+{
+    public class ApplicationConfig : DbContext
+    {
+        public DbSet<User> Users { get; set; } = null!;
+
+        public DbSet<Device> Devices { get; set; } = null!;
+
+        public DbSet<Person> Persons { get; set; } = null!;
+
+        public DbSet<Peripheral> Peripherals { get; set; } = null!;
+
+        public DbSet<History> Histories { get; set; } = null!;
+
+        public DbSet<Os> Oses { get; set; } = null!;
+
+        public DbSet<Computer> Computers { get; set; } = null!;
+
+        public DbSet<Component> Components { get; set; } = null!;
+
+        public ApplicationConfig() {}
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=helloappdb;Trusted_Connection=True;");
+        }
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CompARKv2.Classes
+{
+    public class Component
+    {
+        public enum ComponentType
+        {
+            CPU,
+            Motherboard,
+            HDD,
+            Other
+        }
+        public int ID { get; set; }
+        public ComponentType componentType { get; set; }
+        public string name { get; set; }
+        public string manufacturer { get; set; }
+
+        public string other { get; set; }
+
+
+        public Component(ComponentType componentType, string name, string manufacturer, string other)
+        {
+            this.componentType = componentType;
+            this.name = name;
+            this.manufacturer = manufacturer;
+            this.other = other;
+        }
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text;
+
+namespace CompARKv2.Classes
+{
+    public class Computer : Device
+    {
+        public Os os { get; set; }
+        public List<Component> components { get; set; }
+
+        private Computer() { }
+
+        public Computer(Os os, List<Component> components)
+        {
+            this.os = os;
+            this.components = components;
+        }
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CompARKv2.Classes
+{
+    public enum Status
+    {
+        Working,
+        On_repair,
+        Decomissioned
+    }
+    public class Device
+    {
+        public int ID { get; set; }
+
+        public int Inventory_number { get; set; }
+        public Status status { get; set; }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
+namespace CompARKv2.Classes
+{
+    public class History
+    {
+        public int ID { get; set; }
+
+        public DateTime Date { get; set; }
+
+        public string Description { get; set; }
+
+        public Status Status_From { get; set; }
+
+        public Status Status_To { get; set; }
+
+        private History() { }
+
+        public History(DateTime _Date, string _Description, Status _Status_From, Status _Status_To)
+        {
+            Date = _Date;
+            Description = _Description;
+            Status_From = _Status_From;
+            Status_To = _Status_To;
+        }
+
+
+        public void HistoryEdit(DateTime _Date, string _Description, Status _Status_From, Status _Status_To)
+        {
+            Date = _Date;
+            Description = _Description;
+            Status_From = _Status_From;
+            Status_To = _Status_To;
+        }
+
+
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CompARKv2.Classes
+{
+    public class Os
+    {
+        public int ID { get; set; }
+        public enum OSType
+        {
+            Windows,
+            Linux,
+            MacOS
+        }
+        public OSType osType { get; set; }
+        public string version { get; set; }
+
+        public Os(OSType osType, string version)
+        {
+            this.osType = osType;
+            this.version = version;
+        }
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CompARKv2.Classes
+{
+    public class Peripheral : Device
+    {
+        public enum Peripheral_type
+        {
+            Monitor,
+            Plotter,
+            Printer,
+            Scanner,
+            Other
+        }
+
+        public Peripheral_type Type;
+
+        public string Name { get; set; }
+
+        public string Manufacturer { get; set; }
+
+        public string Description { get; set; }
+
+        private Peripheral() { }
+
+        public Peripheral(Peripheral_type type, string name, string manufacturer, string description)
+        {
+            Type = type;
+            Name = name;
+            Manufacturer = manufacturer;
+            Description = description;
+        }
+
+
+        public void PeripheralEdit(Peripheral_type type, string name, string manufacturer, string description)
+        {
+            Type = type;
+            Name = name;
+            Manufacturer = manufacturer;
+            Description = description;
+        }
+
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CompARKv2.Classes
+{
+    public class Peripheral : Device
+    {
+        public enum Peripheral_type
+        {
+            Monitor,
+            Plotter,
+            Printer,
+            Scanner,
+            Other
+        }
+
+        public Peripheral_type Type;
+
+        public string Name { get; set; }
+
+        public string Manufacturer { get; set; }
+
+        public string Description { get; set; }
+
+        private Peripheral() { }
+
+        public Peripheral(Peripheral_type type, string name, string manufacturer, string description)
+        {
+            Type = type;
+            Name = name;
+            Manufacturer = manufacturer;
+            Description = description;
+        }
+
+
+        public void PeripheralEdit(Peripheral_type type, string name, string manufacturer, string description)
+        {
+            Type = type;
+            Name = name;
+            Manufacturer = manufacturer;
+            Description = description;
+        }
+
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CompARKv2.Classes
+{
+    public class User : Person
+    {
+        public string login { get; set; }
+        public string password { get; set; }
+
+        private User():base() { }
+        public User(Position _position, string _surname, string _name, string _secondName, string _login, string _password) : base(_position, _surname, _name, _secondName)
+        {
+            login = _login;
+            password = _password;
+            position = _position;
+            surname = _surname;
+            name = _name;
+            secondName = _secondName;
+        }
+    }
+}
